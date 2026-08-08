@@ -1,0 +1,303 @@
+{
+  "datasets": [
+    {
+      "name": "5c79dc9a",
+      "displayName": "perfil_sazonal_mensal",
+      "config": {
+        "version": "1.1",
+        "source": "atmos.gold.perfil_sazonal_mensal",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Representa o número total de linhas no conjunto de dados. Utilize esta medida para contar todas",
+            "displayName": "Contagem"
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "489533ee",
+      "displayName": "Página sem título",
+      "layout": [
+        {
+          "widget": {
+            "name": "ultima_atualizacao",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5c79dc9a",
+                  "fields": [
+                    {
+                      "name": "max(timestamp_processamento)",
+                      "expression": "MAX(`timestamp_processamento`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Última Atualização",
+                "showTitle": true,
+                "version": 1
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "max(timestamp_processamento)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "precipitacao_media_ano",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5c79dc9a",
+                  "fields": [
+                    {
+                      "name": "ano",
+                      "expression": "`ano`"
+                    },
+                    {
+                      "name": "avg(precipitacao_total_mm)",
+                      "expression": "AVG(`precipitacao_total_mm`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Precipitação Média por Ano",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "ano",
+                  "displayName": "ano",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "avg(precipitacao_total_mm)",
+                  "displayName": "Precipitação Média (mm)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "ano",
+                  "displayName": "ano",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 12,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "temp_media_pivot",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5c79dc9a",
+                  "fields": [
+                    {
+                      "name": "ano",
+                      "expression": "`ano`"
+                    },
+                    {
+                      "name": "mes",
+                      "expression": "`mes`"
+                    },
+                    {
+                      "name": "nome_municipio",
+                      "expression": "`nome_municipio`"
+                    },
+                    {
+                      "name": "avg(temperatura_media_c)",
+                      "expression": "AVG(`temperatura_media_c`)"
+                    }
+                  ],
+                  "cubeGroupingSets": {
+                    "sets": [
+                      {
+                        "fieldNames": [
+                          "ano",
+                          "mes"
+                        ]
+                      },
+                      {
+                        "fieldNames": [
+                          "nome_municipio"
+                        ]
+                      }
+                    ]
+                  },
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "ASC",
+                      "expression": "`ano`"
+                    },
+                    {
+                      "direction": "ASC",
+                      "expression": "`mes`"
+                    },
+                    {
+                      "direction": "ASC",
+                      "expression": "`nome_municipio`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Temperatura Média por Mês, Ano e Cidade",
+                "showTitle": true,
+                "version": 1
+              },
+              "widgetType": "pivot",
+              "encodings": {
+                "rows": [
+                  {
+                    "fieldName": "ano",
+                    "scale": {
+                      "type": "categorical"
+                    }
+                  },
+                  {
+                    "fieldName": "mes",
+                    "scale": {
+                      "type": "categorical"
+                    }
+                  }
+                ],
+                "columns": [
+                  {
+                    "fieldName": "nome_municipio",
+                    "scale": {
+                      "type": "categorical"
+                    }
+                  }
+                ],
+                "cell": {
+                  "type": "single-cell",
+                  "fieldName": "avg(temperatura_media_c)",
+                  "displayName": "Temp. Média (°C)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 12,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "filtro_ano",
+            "queries": [
+              {
+                "name": "dashboards/01f193551b6f13be85061543011bc8a0/datasets/01f193553ed1105bbaf9a0b98cf27720_ano",
+                "query": {
+                  "datasetName": "5c79dc9a",
+                  "fields": [
+                    {
+                      "name": "ano",
+                      "expression": "`ano`"
+                    },
+                    {
+                      "name": "ano_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Filtro por Ano",
+                "showTitle": true
+              },
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "ano",
+                    "queryName": "dashboards/01f193551b6f13be85061543011bc8a0/datasets/01f193553ed1105bbaf9a0b98cf27720_ano"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
